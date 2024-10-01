@@ -1,0 +1,24 @@
+{% load compress %}
+{% load static %}
+ 
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Tailwind with Django</title>
+ 
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'src/output.css' %}">
+    {% endcompress %}
+    <script async src="node_modules/@material-tailwind/html/scripts/ripple.js"></script>
+ 
+</head>
+ 
+  <body class="flex items-center justify-center h-screen">
+    {% block content %} {% endblock content %}
+  </body>
+ 
+</html>
