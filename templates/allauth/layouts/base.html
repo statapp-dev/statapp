@@ -1,0 +1,121 @@
+{% load i18n %}
+{% load compress %}
+{% load static %}
+ 
+<!DOCTYPE html>
+<html lang="en">
+ 
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block head_title %}{% endblock head_title %} | stat.</title>
+    
+        {% compress css %}
+        <link rel="stylesheet" href="{% static 'src/output.css' %}">
+        {% endcompress %}
+        <!-- Material Icons -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+
+        <!-- Lottie Player -->
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <style>
+            .material-symbols-outlined {
+                font-family: 'Material Symbols Outlined';
+                font-weight: normal;
+                font-style: normal;
+                font-size: 20px;
+                line-height: 1;
+                letter-spacing: normal;
+                text-transform: none;
+                display: inline-block;
+                white-space: nowrap;
+                word-wrap: normal;
+                direction: ltr;
+                -webkit-font-feature-settings: 'liga';
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+        {% block extra_head %}
+        {% endblock extra_head %}
+    </head>
+
+
+    <body>
+        <div class="flex h-dvh w-screen flex-col bg-white dark:bg-black">
+            {% block body %}
+                {% if messages %}
+                    <div>
+                        <strong>{% trans "Messages:" %}</strong>
+                        <ul>
+                            {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="flex flex-row justify-between w-full bg-gray-200 p-4 dark:bg-gray-900 dark:text-white">
+                    {% load static %}
+                    <img class="h-6 w-auto dark:hidden" src="{% static 'assets/logo.png' %}">
+                    <img class="h-6 w-auto hidden dark:block" src="{% static 'assets/logo_dark.png' %}">
+                    <div class="flex-row gap-4 hidden sm:flex">
+                        {% if user.is_authenticated %}
+                            {% url 'account_email' as email_url_ %}
+                            {% if email_url_ %}
+                                <a href="{{ email_url_ }}">
+                                    {% trans "Change Email" %}
+                                </a>
+                            {% endif %}
+                            {% url 'account_change_password' as change_password_url_ %}
+                            {% if change_password_url_ %}
+                                <a href="{{ change_password_url_ }}">{% trans "Change Password" %}</a>
+                            {% endif %}
+                            {% url 'socialaccount_connections' as connections_url_ %}
+                            {% if connections_url_ %}
+                                <a href="{{ connections_url_ }}">{% trans "Account Connections" %}</a>
+                            {% endif %}
+                            {% url 'mfa_index' as mfa_url_ %}
+                            {% if mfa_url_ %}
+                                <a href="{{ mfa_url_ }}">{% trans "Two-Factor Authentication" %}</a>
+                            {% endif %}
+                            {% url 'usersessions_list' as usersessions_list_url_ %}
+                            {% if usersessions_list_url_ %}
+                                <a href="{{ usersessions_list_url_ }}">{% trans "Sessions" %}</a>
+                            {% endif %}
+                            {% url 'account_logout' as logout_url_ %}
+                            {% if logout_url_ %}
+                                <a href="{{ logout_url_ }}">{% trans "Sign Out" %}</a>
+                            {% endif %}
+                        {% else %}
+                            {% url 'account_login' as login_url_ %}
+                            {% if login_url_ %}
+                                <a href="{{ login_url_ }}" class="flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined">
+                                        login
+                                    </span>
+                                    {% trans "Sign In" %}
+                                </a>
+                            {% endif %}
+                            {% url 'account_signup' as signup_url_ %}
+                            {% if signup_url_ %}
+                                <a href="{{ signup_url_ }}" class="flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined">
+                                        person_add
+                                    </span>
+                                    {% trans "Sign Up" %}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex h-full w-full flex-col items-center justify-center p-6">
+                    <div class="flex flex-col bg-gray-200 p-8 rounded-xl dark:bg-gray-900 dark:text-white">
+                    {% block content %}
+                    {% endblock content %}
+                    </div>
+                    <div class="h-1/2"></div>
+                </div>
+            {% endblock body %}
+            {% block extra_body %}
+            {% endblock extra_body %}
+        </div>
+    </body>
+</html>
